@@ -1344,7 +1344,7 @@ var KPI=[
   {key:'product_mix',label:'상품구색',hasSignal:false,level:0,children:PRODUCT_MIX_CHILDREN,fields:[{label:'당월 실적'},{label:'전년동월 실적'}]},
   {key:'bms',label:'BMS',hasSignal:false,level:0,children:BMS_CHILDREN,fields:[{label:'당월 실적'},{label:'전년동월 실적'}]},
   {key:'sod',label:'SOD',hasSignal:false,level:0,children:SOD_CHILDREN,fields:[{label:'당월 실적'},{label:'전년동월 실적'}]},
-  {key:'vendor_a',label:'A판매사',hasSignal:false,level:0,children:[],fields:[{label:'당월 실적'},{label:'전년동월 실적'}]},
+  {key:'vendor_a',label:'협력업체',hasSignal:false,level:0,children:[],fields:[{label:'당월 실적'},{label:'전년동월 실적'}]},
   {key:'online_ratio',label:'온라인점수',hasSignal:false,level:0,children:ONLINE_CHILDREN,fields:[{label:'당월 온라인점수 (%)'},{label:'전년동월 온라인점수 (%)'}]},
   {key:'fee_rate',label:'특정수수료율',hasSignal:false,level:0,children:FEE_RATE_CHILDREN,fields:[{label:'당월 수수료율 (%)'},{label:'전년동월 수수료율 (%)'}]},
   {key:'vacancy',label:'공실',hasSignal:false,level:0,children:[
@@ -2841,7 +2841,7 @@ var HIST_KPIS = [
   {key:'online_ratio', label:'온라인점수',     isSignal:false, unit:'점'},
   {key:'op_profit',    label:'(예상) 영업이익',isSignal:true,  unit:'%'},
   {key:'product_mix',  label:'상품구색',       isSignal:false, unit:'점'},
-  {key:'vendor_a',     label:'A판매사',        isSignal:false, unit:'점'},
+  {key:'vendor_a',     label:'협력업체',        isSignal:false, unit:'점'},
   {key:'fee_rate',     label:'특정수수료율',   isSignal:false, unit:'%'},
   {key:'vacancy',      label:'공실',           isSignal:false, unit:''},
   {key:'headcount',    label:'인원수',         isSignal:false, unit:'명'},
@@ -3485,7 +3485,7 @@ render();
       </div>
       <div class="info-row">
         <span class="info-row-label">이메일</span>
-        <span class="info-row-val">JIN_YOUNHO@eland.co.kr</span>
+        <span class="info-row-val"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="83c9cacddcdaccd6cdcbccc3e6efe2ede7ade0ecade8f1">[email&#160;protected]</a></span>
       </div>
       <div class="info-row">
         <span class="info-row-label">연락처</span>
@@ -3494,7 +3494,7 @@ render();
     </div>
     <div id="info-card-footer">문의사항은 언제든 연락 주세요</div>
   </div>
-</body>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script></body>
 </htmlopenPopupDrilldown(&apos;' + safeName + '&apos;)d>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -4273,7 +4273,7 @@ var KPI=[
   {key:'product_mix',label:'상품구색',hasSignal:false,level:0,children:PRODUCT_MIX_CHILDREN,fields:[{label:'당월 실적'},{label:'전년동월 실적'}]},
   {key:'bms',label:'BMS',hasSignal:false,level:0,children:BMS_CHILDREN,fields:[{label:'당월 실적'},{label:'전년동월 실적'}]},
   {key:'sod',label:'SOD',hasSignal:false,level:0,children:SOD_CHILDREN,fields:[{label:'당월 실적'},{label:'전년동월 실적'}]},
-  {key:'vendor_a',label:'A판매사',hasSignal:false,level:0,children:[],fields:[{label:'당월 실적'},{label:'전년동월 실적'}]},
+  {key:'vendor_a',label:'협력업체',hasSignal:false,level:0,children:[],fields:[{label:'당월 실적'},{label:'전년동월 실적'}]},
   {key:'online_ratio',label:'온라인점수',hasSignal:false,level:0,children:ONLINE_CHILDREN,fields:[{label:'당월 온라인점수 (%)'},{label:'전년동월 온라인점수 (%)'}]},
   {key:'fee_rate',label:'특정수수료율',hasSignal:false,level:0,children:FEE_RATE_CHILDREN,fields:[{label:'당월 수수료율 (%)'},{label:'전년동월 수수료율 (%)'}]},
   {key:'vacancy',label:'공실',hasSignal:false,level:0,children:[
@@ -5579,14 +5579,4 @@ function popPopup() {
   if (id === 'brand-popup') closeBrandPopup({target: null, _force: true});
   else if (id === 'drill-popup') closeDrillPopup();
   else if (id === 'kpi-popup') closeKpiPopup();
-  else if (id === 'hist-popup') closeHistPopup();
-  else if (id === 'info-card') document.getElementById('info-card').classList.remove('active');
-}
-
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') popPopup();
-});
-</script>
-
-</body>
-</html>
+  else if (id === 'hist-popup') clo
