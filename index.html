@@ -1051,33 +1051,23 @@ async function loadAssortmentData() {
     const json = await res.json();
     if (json.error) throw new Error(json.error);
 
-    const dataObj = json.data || json;
-    const sampleKey = Object.keys(dataObj)[0];
-    console.log('[상품구색] 응답 최상위 키:', Object.keys(json));
-    if (sampleKey) console.log('[상품구색] 첫 번째 점포 데이터:', sampleKey, JSON.stringify(dataObj[sampleKey]));
-
     const allStores = HQ.flatMap(h => h.stores);
-    let matched = 0;
     allStores.forEach(function(sn) {
-      const d = dataObj[sn];
+      const d = json.data[sn];
       if (!d) return;
-      matched++;
-      stores[sn]['product_mix']         = { cur: d.total    !== undefined ? d.total    : null, yoy: null };
-      stores[sn]['pm_할인율점수']        = { cur: d.discount !== undefined ? d.discount : null, yoy: null };
-      stores[sn]['pm_상품신선도']        = { cur: d.fresh    !== undefined ? d.fresh    : null, yoy: null };
-      stores[sn]['pm_시즌적합도']        = { cur: d.season   !== undefined ? d.season   : null, yoy: null };
-      stores[sn]['pm_베스트상품점수']    = { cur: d.best     !== undefined ? d.best     : null, yoy: null };
+      // 상품구색 4개 항목 주입 (KPI 키: product_mix, pm_*)
+      stores[sn]['product_mix']         = { cur: d.total,    yoy: null };
+      stores[sn]['pm_할인율점수']        = { cur: d.discount, yoy: null };
+      stores[sn]['pm_상품신선도']        = { cur: d.fresh,    yoy: null };
+      stores[sn]['pm_시즌적합도']        = { cur: d.season,   yoy: null };
+      stores[sn]['pm_베스트상품점수']    = { cur: d.best,     yoy: null };
     });
 
-    if (matched === 0) {
-      console.error('[상품구색] ❌ 매칭 점포 없음 — 코드:', allStores.slice(0,5), '/ 시트:', Object.keys(dataObj).slice(0,5));
-    } else {
-      console.log('[상품구색] ✅ 점포 매칭:', matched + '/' + allStores.length);
-    }
     _assortLoaded = true;
     render();
+    console.log('[상품구색] 데이터 로드 완료');
   } catch(e) {
-    console.error('[상품구색] ❌ 로드 실패:', e.message);
+    console.warn('[상품구색] 데이터 로드 실패:', e.message);
   } finally {
     _assortLoading = false;
   }
@@ -1132,22 +1122,20 @@ async function loadVacancyData() {
     if (!res.ok) throw new Error('HTTP ' + res.status);
     var json = await res.json();
     if (json.error) throw new Error(json.error);
-
-    _vacancyData = json.data || json;
-    var sampleKey = Object.keys(_vacancyData)[0];
-    console.log('[공실] 응답 최상위 키:', Object.keys(json));
-    if (sampleKey) console.log('[공실] 첫 번째 점포 원본:', sampleKey, JSON.stringify(_vacancyData[sampleKey]));
+    _vacancyData = json.data;
     _vacancyLoaded = true;
 
+    // stores에 공실 데이터 주입
     var allStores = HQ.flatMap(h => h.stores);
-    var matched = 0;
     allStores.forEach(sn => {
       var sd = _vacancyData[sn];
       if (!sd) return;
-      matched++;
+      // 전체 공실
       if (sd['전체'] !== null && sd['전체'] !== undefined) {
         stores[sn]['vacancy'] = { cur: sd['전체'], prev: null, yoy: null };
       }
+      // 층별 공실 — 시트 층명 → KPI key 변환
+      // 시트: "B2층","1층" → KPI key: "vc_floor_B2","vc_floor_01"
       var floorKeyMap = {
         'B2층':'B2','B1층':'B1','1층':'01','2층':'02','3층':'03','4층':'04',
         '5층':'05','6층':'06','7층':'07','8층':'08','9층':'09','10층':'10',
@@ -1168,14 +1156,16 @@ async function loadVacancyData() {
       });
     });
 
-    if (matched === 0) {
-      console.error('[공실] ❌ 매칭 점포 없음 — 코드:', allStores.slice(0,5), '/ 시트:', Object.keys(_vacancyData).slice(0,5));
-    } else {
-      console.log('[공실] ✅ 점포 매칭:', matched + '/' + allStores.length);
-    }
+    // 디버그: 첫 번째 점포 공실값 확인
+    var testStore = HQ[0].stores[0];
+    console.log('[공실] 로드 완료. 샘플 점포:', testStore);
+    console.log('[공실] vacancy값:', stores[testStore] && stores[testStore]['vacancy']);
+    console.log('[공실] vc_floor_01값:', stores[testStore] && stores[testStore]['vc_floor_01']);
+    console.log('[공실] 시트 원본:', _vacancyData[testStore]);
     render();
+    console.log('공실 데이터 로드 완료');
   } catch(e) {
-    console.error('[공실] ❌ 로드 실패:', e.message);
+    console.warn('공실 데이터 로드 실패:', e.message);
   } finally {
     _vacancyLoading = false;
   }
@@ -3495,7 +3485,7 @@ render();
       </div>
       <div class="info-row">
         <span class="info-row-label">이메일</span>
-        <span class="info-row-val"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="cd878483929482988385828da8a1aca3a9e3aea2e3a6bf">[email&#160;protected]</a></span>
+        <span class="info-row-val">JIN_YOUNHO@eland.co.kr</span>
       </div>
       <div class="info-row">
         <span class="info-row-label">연락처</span>
@@ -3504,7 +3494,7 @@ render();
     </div>
     <div id="info-card-footer">문의사항은 언제든 연락 주세요</div>
   </div>
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script></body>
+</body>
 </htmlopenPopupDrilldown(&apos;' + safeName + '&apos;)d>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -5452,7 +5442,14 @@ function sortDrill(key) {
   renderDrillTable();
 }
 
-function renderD r = 1;
+function renderDrillTable() {
+  // 성장률 기준으로 랭킹 계산 (항상 y 내림차순)
+  var forRank = [..._drillRows].sort((a,b) => {
+    var av = a.y ?? -Infinity, bv = b.y ?? -Infinity;
+    return bv - av;
+  });
+  var rankMap = {};
+  var r = 1;
   for (var i = 0; i < forRank.length; i++) {
     if (i > 0 && forRank[i].y !== forRank[i-1].y) r = i + 1;
     rankMap[forRank[i].store] = r;
